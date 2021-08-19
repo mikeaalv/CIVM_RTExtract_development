@@ -1,6 +1,7 @@
 function [Sample] = ridgeTracking_wrapper(thisExp,Sample,sample,i)
 % So we don't have to look at all this in the main workflow.
-
+% Always cd(startPath) before return
+%
 % MTJ 10AUG2021
 
     startpath = cd();
@@ -57,7 +58,20 @@ function [Sample] = ridgeTracking_wrapper(thisExp,Sample,sample,i)
                 if samp_i == 1
                   showfigtitle = plotTitle;
                 end
+                
+                answer = menu('RTExtract Complete. Save this result?','Yes - Save and Exit','No - Just Exit');
                 close(fig);
+                switch answer
+                    case 0
+                        cd(startpath)
+                        return
+                    case 1
+                        break
+                    case 2
+                        cd(startpath)
+                        return
+                end
+                
                 
             % Store the data?
                 if ~isempty(fieldnames(returndata))
