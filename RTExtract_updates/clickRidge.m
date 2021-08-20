@@ -139,23 +139,34 @@ function [selectedRidgeInds,logicalInds,ridgeInds,lineObjs,lineData] = clickRidg
     ax = gca;
     fig = ancestor(ax, 'figure');
     hold(ax, 'on');
+    title({titleStr;'Click to select/deselect lines. Enter to continue'});
     
     while true
         
             % Click mouse on a point on the plot
-                
+                x = [];
+                y = [];                
                 [x,y] = ginput(1);
                 
-            % If buttonpress was 'Enter/Return', break out of the
-            % loop
-
-            % Figure out if the action was a click or a buttonpress
+            % If action was "Enter/Return"  - break loop and exit
             
-                sel = get(fig, 'SelectionType');
-
-                if strcmpi(sel, 'alt')
+                if isempty([x,y])
                     break
                 end
+                
+%             % If buttonpress returned coordinates, but was a buttonpress, 
+%             % continue
+%             
+%                 % Figure out if the action was a click or a buttonpress/right click
+%                     % Note: clicks return coordinates, but are 'normal'
+%                     % SelectionType, as are buttonpresses. Right-clicks are 'alt'
+%                     % SelectionType
+%                     
+%                     sel = get(fig, 'SelectionType');
+%                     
+%                     if strcmpi(sel, 'alt')
+%                         continue        % skip this iteration
+%                     end
 
             % Within a given radius (euclidean distance)
 
