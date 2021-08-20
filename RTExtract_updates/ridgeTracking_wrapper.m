@@ -1,4 +1,4 @@
-function [Sample] = ridgeTracking_wrapper(thisExp,Sample,sample,i)
+function [Sample] = ridgeTracking_wrapper(thisExp,i)
 % So we don't have to look at all this in the main workflow.
 % Always cd(startPath) before return
 %
@@ -21,13 +21,19 @@ function [Sample] = ridgeTracking_wrapper(thisExp,Sample,sample,i)
         regionsele = thisExp.trackingRegions;
         wander_settingByRegion = thisExp.wander_settingByRegion;
         intensityVariation_ByRegion = thisExp.intensityVariation_ByRegion;
+
+%% Set up data structure
+
+        sample = 1;
+        Sample = struct();
+        Sample.ridges(1).parameters = [];
+        Sample.ridges(1).result = [];
         
             
 %% Plot to make sure the spectra look good. Params used for plotting later?
 
     thisExp.horzshift = .002;
     thisExp.vertshift = 1E-2;
-
 
 
     mkdir('Production_Run')

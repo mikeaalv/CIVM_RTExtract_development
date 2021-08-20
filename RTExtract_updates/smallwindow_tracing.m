@@ -65,7 +65,7 @@ else
   ridvalallhere=ridrefinetab(ind,3);
   clusters=unique(clustshere,'stable')';
   % nclusters=length(clusters);
-  disp('2: select the reigon to refine(make ridge straight)');
+  disp('2: select the region to refine (make ridge straight)');
   fig=plotRidgesherenew(mat,ppm,time,clustshere,cindallhere,rindallhere,ridvalallhere,clusters,'select the reigon to refine(make ridge straight)');
   %%convert the index
   refinereturndata=ridrefinetab;
