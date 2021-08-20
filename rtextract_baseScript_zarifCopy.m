@@ -8,11 +8,11 @@
 
 % ->>>          Public toolbox found @  https://github.com/artedison/Edison_Lab_Shared_Metabolomics_UGA
 
-                    localPaths.public_toolbox = '/Users/mjudge/Edison_Lab_Shared_Metabolomics_UGA';
+                    localPaths.public_toolbox = '>>YOUR_LOCAL_PATH<<';
         
 % ->>>          RTExtract updates found @  https://github.com/judgemt/CIVM_RTExtract_development
 
-                    localPaths.rtextract_dvpt_path = '/Users/mjudge/Documents/GitHub/CIVM_RTExtract_development/RTExtract_updates';
+                    localPaths.rtextract_dvpt_path = '>>YOUR_LOCAL_PATH (make sure it includes the /RTExtract_updates <<';
         
 %% Add the toolboxes (run this when Matlab starts)
 
