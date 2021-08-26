@@ -148,13 +148,13 @@ function [ridges,parameters] = initiatetempridges(thisExp,i)
 
                  switch response
                     case 1
-                        ridges = thisExp.region.ridges;
-                        parameters = thisExp.region.parameters;
+                        ridges = thisExp.region(i).ridges;
+                        parameters = thisExp.region(i).parameters;
                     case 2
                         % do nothing
                     case 3
-                        ridges = thisExp.region.ridges;
-                        parameters = thisExp.region.parameters;
+                        ridges = thisExp.region(i).ridges;
+                        parameters = thisExp.region(i).parameters;
                         return
                  end
             end
