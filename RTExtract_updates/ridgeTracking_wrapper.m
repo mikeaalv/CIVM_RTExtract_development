@@ -34,7 +34,7 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
             
             %% Initialize storage structures using existing or new ridges
                                     
-                    [ridges,parameters] = initiateRidges(thisExp,i); % this is important, as premature program termination 
+                    [ridges,parameters] = initiatetempridges(thisExp,i); % this is important, as premature program termination 
                                                                      % may otherwise return empty objects which overwrite 
                                                                      % previous data
                     
@@ -79,27 +79,29 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
 
                 uniqueGroups = unique(groups,'stable')';
             
+                tempridges = struct();
                 for r = 1:length(uniqueGroups) % for each ridge:
                   g = uniqueGroups(r);
                   groupind = find(result(:,5) == g);
                   temptab = result(groupind,:);
                   temptab(:,5) = [];
                   
-                      ridges(r).linearind = temptab(:,1);
-                      ridges(r).colind = temptab(:,2);
-                      ridges(r).rowind = temptab(:,3);
-                      ridges(r).intensity = temptab(:,4);
-                      ridges(r).names = ridnames(groupind);
-                      ridges(r).quanvec = quanvec(groupind);
-                      ridges(r).time = temptab(:,5);
-                      ridges(r).ppm = temptab(:,6);
+                      tempridges(r).linearind = temptab(:,1);
+                      tempridges(r).colind = temptab(:,2);
+                      tempridges(r).rowind = temptab(:,3);
+                      tempridges(r).intensity = temptab(:,4);
+                      tempridges(r).names = ridnames(groupind);
+                      tempridges(r).quanvec = quanvec(groupind);
+                      tempridges(r).time = temptab(:,5);
+                      tempridges(r).ppm = temptab(:,6);
                                                 
                 end
             
     parameters = returndata.para;
     
     % Remove empty ridges
-        ridges(cellfun(@isempty,{ridges.colind})) = [];
+        tempridges(cellfun(@isempty,{tempridges.colind})) = [];
+        ridges = [ridges,tempridges];
 
     %% Save the data
 
@@ -117,7 +119,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function [yesRidges] = hasRidges(thisExp,i)
+function [yesRidges] = hasridges(thisExp,i)
 
     % Find out if we have ridge data
            try 
@@ -128,7 +130,7 @@ function [yesRidges] = hasRidges(thisExp,i)
 
 end
 
-function [ridges,parameters] = initiateRidges(thisExp,i)
+function [ridges,parameters] = initiatetempridges(thisExp,i)
 
     % Initialize as struct objects
     
@@ -137,7 +139,7 @@ function [ridges,parameters] = initiateRidges(thisExp,i)
             currentTrackingRegion = thisExp.trackingRegions(i,:);
             
     % If ridges exist, give the option to re-initialize using old ridges
-            if hasRidges(thisExp,i)
+            if hasridges(thisExp,i)
 
                 response = menu({['Ridges have been tracked for region ',num2str(i)];...
                     [' (',num2str(currentTrackingRegion(1)),'-',num2str(currentTrackingRegion(2)),' ppm) in '];...
@@ -146,13 +148,13 @@ function [ridges,parameters] = initiateRidges(thisExp,i)
 
                  switch response
                     case 1
-                        ridges = thisExp.region.ridges;
-                        parameters = thisExp.region.parameters;
+                        ridges = thisExp.region(i).ridges;
+                        parameters = thisExp.region(i).parameters;
                     case 2
                         % do nothing
                     case 3
-                        ridges = thisExp.region.ridges;
-                        parameters = thisExp.region.parameters;
+                        ridges = thisExp.region(i).ridges;
+                        parameters = thisExp.region(i).parameters;
                         return
                  end
             end
