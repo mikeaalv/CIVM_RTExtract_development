@@ -101,8 +101,12 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
     
     % Remove empty ridges
         tempridges(cellfun(@isempty,{tempridges.colind})) = [];
-        ridges = [ridges,tempridges];
-
+        if isequal(ridges,struct())
+            ridges = tempridges;
+        else
+            ridges = [ridges,tempridges];
+        end
+        
     %% Save the data
 
             save([num2str(currentTrackingRegion(1)),'-',num2str(currentTrackingRegion(2)),'ppm.mat'],'ridges','parameters');
