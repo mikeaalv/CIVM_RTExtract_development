@@ -129,6 +129,8 @@ function [plotInds,plotIndsCat,newData] = calc_stackPlotInds(data,numPoints,smoo
                     plotInds{i} = round(linspace(indsLists{i}(1),indsLists{i}(end),numPoints_row(i)));
                 end      
                 
+                data = vertcat(data{:});
+                
         case 'struct'
             
         otherwise
@@ -140,6 +142,7 @@ function [plotInds,plotIndsCat,newData] = calc_stackPlotInds(data,numPoints,smoo
     if exist('smooth','var')
             data = HRMAS_signalAverage(data,1:size(data,2),round(size(data,1)/numPoints));            
     end
+    
     
     newData = data(plotIndsCat,:);
     
