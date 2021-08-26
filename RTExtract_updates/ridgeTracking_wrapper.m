@@ -100,7 +100,7 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
     parameters = returndata.para;
     
     % Remove empty ridges
-        tempridges(cellfun(@isempty,{ridges.colind})) = [];
+        tempridges(cellfun(@isempty,{tempridges.colind})) = [];
         ridges = [ridges,tempridges];
 
     %% Save the data
