@@ -1,4 +1,4 @@
-function [peaks] = ridges2peaks()
+function [peaks] = ridges2peaks(ridges)
 %% ridges2peaks
 %
 %   This function allows ridges from a more complex data structure to be
@@ -12,19 +12,18 @@ function [peaks] = ridges2peaks()
 %
 %       peaks:  
 
-      samp_i = sample(samp_i_i);
-      data = matrix;
-      ppm = ppm;
+%       ridges = thisExp.region.ridges;
+            
       peaks = struct();
-      ridgenumbers = 1:length(Sample(samp_i_i).ridges);
+      ridgenumbers = 1:length(ridges);
+      
       for r = 1:length(ridgenumbers)
-        if ~isempty(Sample(samp_i_i).ridges(ridgenumbers(r)).result)
-          % peaks(i).Ridges = ppm(Sample(samp_i_i).ridges(ridgenumbers(i)).result.colind);
-          peaks(r).Ridges = Sample(samp_i_i).ridges(ridgenumbers(r)).result.ppm';
-          peaks(r).RowInds = Sample(samp_i_i).ridges(ridgenumbers(r)).result.rowind';
-          peaks(r).RidgeIntensities = Sample(samp_i_i).ridges(ridgenumbers(r)).result.intensity';
-          peaks(r).CompoundNames = Sample(samp_i_i).ridges(ridgenumbers(r)).result.names;
-          peaks(r).quantifiable = Sample(samp_i_i).ridges(ridgenumbers(r)).result.quanvec;
+        if ~isempty(ridges(ridgenumbers(r)))
+          peaks(r).Ridges = ridges(ridgenumbers(r)).ppm';
+          peaks(r).RowInds = ridges(ridgenumbers(r)).rowind';
+          peaks(r).RidgeIntensities = ridges(ridgenumbers(r)).intensity';
+          peaks(r).CompoundNames = ridges(ridgenumbers(r)).names;
+          peaks(r).quantifiable = ridges(ridgenumbers(r)).quanvec;
         else
           peaks(r).Ridges = [];
           peaks(r).RowInds = [];
