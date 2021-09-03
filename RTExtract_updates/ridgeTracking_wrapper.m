@@ -136,7 +136,7 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
         
     %% Save the data
 
-            save([num2str(currentTrackingRegion(1)),'-',num2str(currentTrackingRegion(2)),'ppm.mat'],'ridges','parameters');
+            save(['region_',num2str(currentTrackingRegion(1)),'-',num2str(currentTrackingRegion(2)),'ppm.mat'],'ridges','parameters');
 
     cd(startpath)
     return
