@@ -96,15 +96,42 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
                       tempridges(r).ppm = temptab(:,6);
                                                 
                 end
-            
-    parameters = returndata.para;
-    
+                
     % Remove empty ridges
         tempridges(cellfun(@isempty,{tempridges.colind})) = [];
-        if isequal(ridges,struct())
-            ridges = tempridges;
+        
+    % Assign runNumber based on previous runs (necessary for alignment with
+    % corresponding parameters struct indices)
+    
+        if isequal(ridges,struct()) && isequal(parameters,struct())
+            % If this is a new run, initiate runNumber as 1
+            
+                ridges = tempridges;
+                    [ridges(:).runNumber] = deal(1);
+                parameters = returndata.para;
+                
         else
-            ridges = [ridges,tempridges];
+            % If a previous run has been recorded
+            
+                % First, update the structure (in case there isn't runNumber)
+                    if ~isfield(ridges,'runNumber')
+                        [ridges(:).runNumber] = deal(1);
+                    end
+                    
+                % At this point, every row in ridges has a runNumber
+                % assigned. Next, increase the runNumber for the new  
+                % rows in tempridges (to beconcatentated to ridges)
+                
+                    % Which rows are from the most recent run?
+                        previousRidges = find([ridges.runNumber] == ridges(end).runNumber);
+
+                    % Get the most recent run number, set current runNumber to prev +1
+                        [tempridges(:).runNumber] = deal(ridges(previousRidges(end)).runNumber + 1);
+                        
+                % Concatenate tempridges to the end of ridges. Store
+                % params (index to match the runNumber for this run).
+                    ridges = [ridges,tempridges];
+                    parameters = catStructs(parameters,returndata.para);                    
         end
         
     %% Save the data

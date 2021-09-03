@@ -66,25 +66,64 @@ else
   clusters=unique(clustshere,'stable')';
   % nclusters=length(clusters);
   disp('2: select the region to refine (make ridge straight)');
-  fig=plotRidgesherenew(mat,ppm,time,clustshere,cindallhere,rindallhere,ridvalallhere,clusters,'select the reigon to refine(make ridge straight)');
+  fig=plotRidgesherenew(mat,ppm,time,clustshere,cindallhere,rindallhere,ridvalallhere,clusters,'Ridge re-tracking/extension module');
+    
+    % Get handles before making the instructions box
+        thisfig = gcf;
+        ax = gca;
+            anc = ancestor(ax, 'figure');
+            hold(ax, 'on');
+      
+    % Instructions box (wait till closed)
+        uiwait(msgbox({'Click and drag a rectangle to extend/straighten each ridge.';...
+                '';...
+                'Include a few current endpoints, as well as some new maxima to be tracked.';...
+                '';...
+                'Size/Position/dimensions of the box with respect to the current endpoints'' trajectory';...
+                '	and the new maxima to be tracked influences re-tracking results';...
+                '';...
+                'Box may not be completely visible on surf plots, but it is there.';...            
+                '';...
+                'Once you drag a box and release the click, the ridge will be extended.';...            
+                '	at that point, you can draw another box.';...            
+                '';...
+                'Shift-click to exit ridge extension module and move on to ridge picking.';...            
+                '';...
+                '(Enter/click ''OK'' to close this window and begin)'},...
+                'Local Re-tracking Instructions','modal'))
+     figure(thisfig)
   %%convert the index
   refinereturndata=ridrefinetab;
   para.refined_region=[];
   while 1
-    fig=gcf;
-    rect=getrect(fig);%xmin ymin width height; x->ppm y->time
-    rectrag=[max(ppm(1),rect(1)) max(time(1),rect(2)); min(ppm(end),rect(1)+rect(3)) min(time(end),rect(2)+rect(4))];%xmin ymin xmax ymax
-    para.refined_region=[para.refined_region rectrag];
-    rectragind=[matchPPMs(rectrag(:,1)',ppm);matchPPMs(rectrag(:,2)',time)];
-    matselec=mat(rectragind(2):rectragind(4),rectragind(1):rectragind(3));
-    %%find out the ridges that cross boundary
-    clust_ref=[];
-    subindex=find((refinereturndata(:,1)>=rectragind(1,1)&refinereturndata(:,1)<=rectragind(1,2))&(refinereturndata(:,2)>=rectragind(2,1)&refinereturndata(:,2)<=rectragind(2,2)));
-    subtab=refinereturndata(subindex,:);
-    clustersnew=unique(intersect(subtab(:,4),clustshere),'stable');
-    if length(clustersnew)==0
-      break;
-    end
+
+            rect=getrect(thisfig);%xmin ymin width height; x->ppm y->time
+            
+        % If continuing (not shift-click)
+            
+                % Figure out if the action was a shift-click
+                                        
+                    if strcmpi(get(thisfig, 'SelectionType'), 'extend')       % achieved using shift-click, middle click, or left+right click
+                        break        % exit while loop
+                    end
+             
+        % If not shift-click, do the calculations     
+                    
+            rectrag=[max(ppm(1),rect(1)) max(time(1),rect(2)); min(ppm(end),rect(1)+rect(3)) min(time(end),rect(2)+rect(4))];%xmin ymin xmax ymax
+            para.refined_region=[para.refined_region rectrag];
+            rectragind=[matchPPMs(rectrag(:,1)',ppm);matchPPMs(rectrag(:,2)',time)];
+            matselec=mat(rectragind(2):rectragind(4),rectragind(1):rectragind(3));
+            %%find out the ridges that cross boundary
+            clust_ref=[];
+            subindex=find((refinereturndata(:,1)>=rectragind(1,1)&refinereturndata(:,1)<=rectragind(1,2))&(refinereturndata(:,2)>=rectragind(2,1)&refinereturndata(:,2)<=rectragind(2,2)));
+            subtab=refinereturndata(subindex,:);
+            clustersnew=unique(intersect(subtab(:,4),clustshere),'stable');
+            
+   
+    
+%     if length(clustersnew)==0
+%       break;
+%     end
     % nclustersnew=length(clustersnew);
     %% pick out bourndaries
     for clustnewsinglei=1:length(clustersnew)
@@ -197,6 +236,11 @@ else
     clusters=unique(clustshere,'stable')';
     disp('plot refined ridges');
     fig=plotRidgesherenew(mat,ppm,time,clustshere,cindallhere,rindallhere,ridvalallhere,clusters,'refined ridges');
+    % Get handles before making the instructions box
+        thisfig = gcf;
+        ax = gca;
+            anc = ancestor(ax, 'figure');
+            hold(ax, 'on');  
   end
 end
 resstr.refinereturndata=refinereturndata;
