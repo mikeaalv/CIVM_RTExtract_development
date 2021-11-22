@@ -18,7 +18,7 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
                 
             %         matrix = vertcat(thisExp.smoothedData(thisExp.traceMats).data);
             %             matrix = matrix(thisExp.plotInds{:},:);
-            % 
+            %
                     matrix = thisExp.matrix;
                     ppm = thisExp.ppm;
 
@@ -27,21 +27,21 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
 
                     regionsele = thisExp.trackingRegions;
                     wander_settingByRegion = thisExp.wander_settingByRegion;
-                    intensityVariation_ByRegion = thisExp.intensityVariation_ByRegion;
+                    maxpeakadd = thisExp.maxpeakadd;
                     currentTrackingRegion = regionsele(i,:);
                     plotTitle = [num2str(currentTrackingRegion(1)),'-',num2str(currentTrackingRegion(2)),'ppm - ',thisExp.plotTitle{:},'.testplot'];
                     fprintf(['\n\n\t\t\t', thisExp.plotTitle{:},   ' region ', num2str(i),'\n\n']);
             
             %% Initialize storage structures using existing or new ridges
                                     
-                    [ridges,parameters] = initiatetempridges(thisExp,i); % this is important, as premature program termination 
-                                                                     % may otherwise return empty objects which overwrite 
+                    [ridges,parameters] = initiatetempridges(thisExp,i); % this is important, as premature program termination
+                                                                     % may otherwise return empty objects which overwrite
                                                                      % previous data
                     
             %% Run the Function
             try
-                [returndata] = ridgetrace_power2_ext(matrix,ppm,timepoints,currentTrackingRegion,path,wander_settingByRegion(i),intensityVariation_ByRegion(i));
-            catch 
+                [returndata] = ridgetrace_power2_ext(matrix,ppm,timepoints,currentTrackingRegion,path,wander_settingByRegion(i),maxpeakadd(i));
+            catch
                 warning('Program terminated prematurely. Data were not saved.');
                 cd(startpath)
                 return
@@ -119,7 +119,7 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
                     end
                     
                 % At this point, every row in ridges has a runNumber
-                % assigned. Next, increase the runNumber for the new  
+                % assigned. Next, increase the runNumber for the new
                 % rows in tempridges (to beconcatentated to ridges)
                 
                     % Which rows are from the most recent run?
@@ -131,7 +131,7 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
                 % Concatenate tempridges to the end of ridges. Store
                 % params (index to match the runNumber for this run).
                     ridges = [ridges,tempridges];
-                    parameters = catStructs(parameters,returndata.para);                    
+                    parameters = catStructs(parameters,returndata.para);
         end
         
     %% Save the data
@@ -153,9 +153,9 @@ end
 function [yesRidges] = hasridges(thisExp,i)
 
     % Find out if we have ridge data
-           try 
+           try
                yesRidges = ~isempty(thisExp.region(i).ridges(1).colind(1));
-           catch 
+           catch
                yesRidges = 0;
            end
 
