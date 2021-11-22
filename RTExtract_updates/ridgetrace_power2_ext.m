@@ -280,7 +280,7 @@ for i =1:size(ridmin,1)
   tempmat=mat(i,indopt);
   [temp indtemp]=sort(tempmat,'descend');
   if length(indtemp)<maxaddon
-    warning('there is no maxaddon number of maximum for some spectra, use the real maximal number of local maximum instead');
+    warning('there is no maxaddon number of maximum for some spectra, use the real maximal number of local maximum instead. Try reduce maxaddon');
     maxaddon=length(indtemp);
   end
   ridpoint(i,indopt(indtemp(1:maxaddon)))=1;
