@@ -1,4 +1,4 @@
-function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i,addregion,wander,intensity)
+function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i,addregion,wander,maxpeakadd)
 % So we don't have to look at all this in the main workflow.
 % Always cd(startPath) before return
 %
@@ -36,10 +36,10 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i,addregion,wander,
                                 thisExp.wander_settingByRegion(i) = 10;
                             end
                             
-                            if exist('intensity','var')
-                                thisExp.intensityVariation_ByRegion(i) = intensity;
+                            if exist('maxpeakadd','var')
+                                thisExp.maxpeakadd(i) = maxpeakadd;
                             else % default
-                                thisExp.intensityVariation_ByRegion(i) = 1;
+                                thisExp.maxpeakadd(i) = 1;
                             end
                             
                         end
