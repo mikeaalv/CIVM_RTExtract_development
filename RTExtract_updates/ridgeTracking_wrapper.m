@@ -1,4 +1,4 @@
-function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
+function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i,addregion,wander,intensity)
 % So we don't have to look at all this in the main workflow.
 % Always cd(startPath) before return
 %
@@ -25,7 +25,27 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
                     timepoints = vertcat(thisExp.smoothedTimes(thisExp.traceMats).timepoints(:));
                         timepoints = timepoints(thisExp.plotInds{:});
 
+                    % Add a region if passed (for retracking)
+                        if exist('addregion','var')
+                            thisExp.trackingRegions(end+1,:) = addregion;
+                            i = size(thisExp.trackingRegions,1);
+                            
+                            if exist('wander','var')
+                                thisExp.wander_settingByRegion(i) = wander;
+                            else % default
+                                thisExp.wander_settingByRegion(i) = 10;
+                            end
+                            
+                            if exist('intensity','var')
+                                thisExp.intensityVariation_ByRegion(i) = intensity;
+                            else % default
+                                thisExp.intensityVariation_ByRegion(i) = 1;
+                            end
+                            
+                        end
+                        
                     regionsele = thisExp.trackingRegions;
+                    
                     wander_settingByRegion = thisExp.wander_settingByRegion;
                     maxpeakadd = thisExp.maxpeakadd;
                     currentTrackingRegion = regionsele(i,:);
@@ -128,9 +148,16 @@ function [ridges,parameters] = ridgeTracking_wrapper(thisExp,i)
                     % Get the most recent run number, set current runNumber to prev +1
                         [tempridges(:).runNumber] = deal(ridges(previousRidges(end)).runNumber + 1);
                         
+                        if size(tempridges,1) > 1 % make sure these will cat with ridges
+                            tempridges = tempridges';
+                        end
+                        if size(ridges,1) > 1 % make sure these will cat with ridges
+                            ridges = ridges';
+                        end
+                        
                 % Concatenate tempridges to the end of ridges. Store
                 % params (index to match the runNumber for this run).
-                    ridges = [ridges,tempridges];
+                    ridges = [ridges,tempridges]';
                     parameters = catStructs(parameters,returndata.para);
         end
         

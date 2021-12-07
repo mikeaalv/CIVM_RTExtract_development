@@ -33,6 +33,8 @@ function [selectedRidgeInds,logicalInds,ridgeInds,lineObjs,lineData] = clickRidg
         
             if ~exist('objType','var')
                 objType = 'Line';
+            else
+%                 if objType = 'Scatter';
             end
 
         % In case another title should be passed
